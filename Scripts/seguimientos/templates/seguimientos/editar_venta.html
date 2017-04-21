@@ -1,0 +1,32 @@
+{% extends "seguimientos/base.html" %}
+{% load bootstrap3 %}
+{% load new_filters %}
+
+{% block header %}
+	<h3>
+		<a href="{% url 'seguimientos:venta' venta.id %}">{{ venta }}</a>
+	</h3>
+{% endblock header %}
+
+{% block content %}
+{% if request.user|has_group:"Liquidaciones" %}
+	
+	<h4>Revisar cliente:</h4>
+	<form action="{% url 'seguimientos:editar_venta' venta_nueva.id %}" method='post' class="form">
+		{% csrf_token %}
+		{% bootstrap_form form %}
+
+		<div class="container" style="text-align: center">
+			<h5>Vendedor: <span class="label label-default">{{ venta_nueva.owner }}</span></h5>
+		</div>
+
+		{% buttons %}
+			<button name='submit' class="btn btn-success btn-block">Guardar</button>
+		{% endbuttons %}
+	</form>
+{% else %}
+No tenés permiso para liquidar.
+{% endif %}
+
+
+{% endblock content %}

@@ -1,0 +1,19 @@
+{% extends "seguimientos/base.html" %}
+
+{% block header %}
+	<h2>Tipo de venta:</h2>
+{% endblock header %}
+
+{% block content %}
+
+	<ul>
+		{% for venta in ventas %}
+			<li>
+				<h4><a href="{% url 'seguimientos:venta' venta.id %}" >{{ venta }}</a></h4>
+			</li>
+		{% empty %}
+			<li>No hay tipos de venta cargados todavía.</li>
+		{% endfor %}
+	</ul>
+	
+{% endblock content %}

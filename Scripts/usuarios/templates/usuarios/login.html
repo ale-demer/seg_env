@@ -1,0 +1,21 @@
+{% extends "seguimientos/base.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+	<h2>Inicie sesión con su cuenta</h2>
+{% endblock header %}
+
+{% block content %}
+
+	<form method="post" action="{% url 'usuarios:login' %}" class="form">
+		{% csrf_token %}
+		{% bootstrap_form form %}
+		
+		{% buttons %}
+			<button name="submit" class="btn btn-primary">Iniciar sesión</button>
+		{% endbuttons %}
+	
+	<input type="hidden" name="next" value="{% url 'seguimientos:index' %}" />
+	</form>
+
+{% endblock content %}

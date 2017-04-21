@@ -1,0 +1,80 @@
+{% extends 'seguimientos/base.html' %}
+{% load new_filters %}
+
+{% block header %}
+	<h2>Venta: <b>{{ venta }}</b></h2>
+{% endblock header %}
+
+{% block content %}
+	{% if request.user|has_group:"Liquidaciones" %}
+	{% else %}
+		<p>
+			<a href="{% url 'seguimientos:venta_nueva' venta.id %}" class="btn btn-primary">
+				<span class="glyphicon glyphicon-plus"></span> Agregar cliente</a>
+		</p>
+	{% endif %}
+    {% if messages %}
+    <div class="alert alert-success alert-dismissable fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {% for message in messages %}
+            <strong>{{ message }}</strong>
+            {% endfor %}
+    </div>
+    {% endif %}
+	{% for venta_nueva in ventas_nuevas %}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<small>
+					{{ venta_nueva.date_added|date:'d/m/Y H:i' }}  |  
+					<b>
+					Liquidada: {% if venta_nueva.payoff == False %} 
+						<span style="color:red" class="glyphicon glyphicon-remove"></span>
+					{% else %}
+						<span style="color:green" class="glyphicon glyphicon-ok"></span>
+					{% endif %}
+					&nbsp;Estado: {% if venta_nueva.status == 'Rechazada' or venta_nueva.status == 'Venta Caída' or venta_nueva.status == 'Prospect' %}
+						<span style="color:red">{{ venta_nueva.status }}</span>
+					{% else %}
+						<span style="color:green">{{ venta_nueva.status }}</span>
+					{% endif %}
+					</b>&nbsp;
+					<span class="badge">{{ venta_nueva.owner }}</span>
+					{% if request.user|has_group:"Liquidaciones" %}
+					<a href="{% url 'seguimientos:editar_venta' venta_nueva.id %}" class="btn btn-sm pull-right">Revisar</a>
+					{% else %}
+					{% endif %}
+				</small>
+			</div>
+			<div class="panel-body">
+				<small>
+				<b>{{ venta_nueva.name }} {{ venta_nueva.surname }}</b> -
+				{{ venta_nueva.address }} - {{ venta_nueva.location }} | 
+				<strong>Cliente: {{ venta_nueva.client }}</strong>
+				</small>
+			</div>
+        </div> <!-- panel -->
+
+
+	{% empty %}
+		No hay ventas cargadas para este usuario.
+	{% endfor %}
+
+
+        <ul class="pager">
+            {% if ventas_nuevas.has_previous %}
+            <li class="previous"><a href="?page={{ ventas_nuevas.previous_page_number }}" class="btn btn">Anterior</a></li>
+            {% endif %}
+            <span class="current" style="color:grey">
+                Página {{ ventas_nuevas.number }} de {{ ventas_nuevas.paginator.num_pages }}
+            </span>
+            {% if ventas_nuevas.has_next %}
+            <li class="next"><a href="?page={{ ventas_nuevas.end_index }}" class="btn btn">Última página</a></li>
+            <li class="next"><a href="?page={{ ventas_nuevas.next_page_number }}" class="btn btn">Siguiente</a></li>
+            {% endif %}
+
+        </ul>
+
+
+
+
+{% endblock content %}

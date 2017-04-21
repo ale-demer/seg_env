@@ -1,0 +1,60 @@
+{% extends "seguimientos/base.html" %}
+{% load new_filters %}
+
+{% block header %}
+	<div class="jumbotron" style='text-align: center'>
+		<h1>Sistema de Liquidaciones</h1>
+	</div>
+{% endblock header %}
+
+{% block content %}
+	{% if user.is_authenticated %}
+        {% if request.user|has_group:"Liquidaciones" %}
+        	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        	   <script type="text/javascript">
+        	     google.charts.load("current", {packages:["corechart"]});
+        	 	    google.charts.setOnLoadCallback(drawChart);
+        	     function drawChart() {
+        	       var data = google.visualization.arrayToDataTable([
+        	         ['Oficina', 'Cantidad de Ventas'],
+        	         ['IRS0400', {{ request.user|sale_by_group_400 }}],
+        	         ['IRS0401', {{ request.user|sale_by_group_401 }}],
+        	         ['IRS0402', {{ request.user|sale_by_group_402 }}],
+        	         ['IRS0403', {{ request.user|sale_by_group_403 }}],
+        	         ['IRS0405', {{ request.user|sale_by_group_405 }}],
+        	         ['IRS0406', {{ request.user|sale_by_group_406 }}]
+        	       ]);
+
+        	       var options = {
+        	         title: 'Ventas del día',
+        	         is3D: true,
+        	       };
+
+        	       var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+        	       chart.draw(data, options);
+        	     }
+        	 </script>
+			 <center><div id="donutchart" style="width: 900px; height: 500px; "></div></center>
+			<h4>
+			Ventas cargadas hoy por el 0400: {{ request.user|sale_by_group_400 }}</br>
+			Ventas cargadas hoy por el 0401: {{ request.user|sale_by_group_401 }}</br>
+			Ventas cargadas hoy por el 0402: {{ request.user|sale_by_group_402 }}</br>
+			Ventas cargadas hoy por el 0403: {{ request.user|sale_by_group_403 }}</br>
+			Ventas cargadas hoy por el 0405: {{ request.user|sale_by_group_405 }}</br>
+			Ventas cargadas hoy por el 0406: {{ request.user|sale_by_group_406 }}
+			</h4>
+        {% else %}
+		    <h2 style='text-align: center'>Este mes tenés sumados {{ request.user|points_sum }} puntos.</h2>
+        {% endif %}
+	{% else %}
+		<h2>
+			<a href="{% url 'usuarios:login' %}">Inicie sesión</a> para empezar.
+		</h2>
+		</br>
+	{% endif %}
+	</br>
+	</br>
+	</br>
+	<h2 style='text-align: center'><b>UNIVISION SRL</b></h2>
+	
+{% endblock content %}
