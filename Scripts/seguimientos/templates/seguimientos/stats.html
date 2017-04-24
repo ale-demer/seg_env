@@ -7,5 +7,18 @@
 {% endblock header %}
 
 {% block content %}
+	<h3>Mensual:</h3>
+	Ventas totales del mes: {{ request.user|monthly_sales }}</br>
+	Ventas totales del mes pasado: {{ request.user|last_month_sales }}
+
+
+
+	<h3>Diario:</h3>
+	Ventas cargadas hoy por el 0400: {{ request.user|sale_by_group_400 }}</br>
+	Ventas cargadas hoy por el 0401: {{ request.user|sale_by_group_401 }}</br>
+	Ventas cargadas hoy por el 0402: {{ request.user|sale_by_group_402 }}</br>
+	Ventas cargadas hoy por el 0403: {{ request.user|sale_by_group_403 }}</br>
+	Ventas cargadas hoy por el 0405: {{ request.user|sale_by_group_405 }}</br>
+	Ventas cargadas hoy por el 0406: {{ request.user|sale_by_group_406 }}
 
 {% endblock content %}

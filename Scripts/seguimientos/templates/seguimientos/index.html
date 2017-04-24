@@ -35,14 +35,6 @@
         	     }
         	 </script>
 			 <center><div id="donutchart" style="width: 900px; height: 500px; "></div></center>
-			<h4>
-			Ventas cargadas hoy por el 0400: {{ request.user|sale_by_group_400 }}</br>
-			Ventas cargadas hoy por el 0401: {{ request.user|sale_by_group_401 }}</br>
-			Ventas cargadas hoy por el 0402: {{ request.user|sale_by_group_402 }}</br>
-			Ventas cargadas hoy por el 0403: {{ request.user|sale_by_group_403 }}</br>
-			Ventas cargadas hoy por el 0405: {{ request.user|sale_by_group_405 }}</br>
-			Ventas cargadas hoy por el 0406: {{ request.user|sale_by_group_406 }}
-			</h4>
         {% else %}
 		    <h2 style='text-align: center'>Este mes tenés sumados {{ request.user|points_sum }} puntos.</h2>
         {% endif %}

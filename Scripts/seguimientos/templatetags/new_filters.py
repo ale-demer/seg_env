@@ -95,3 +95,27 @@ def sale_by_group_406(user):
     for venta in ventas:
         i += 1
     return i
+
+
+@register.filter( name='monthly_sales' )
+def monthly_sales(user):
+    """Cuenta la cantidad total de ventas en el mes actual."""
+    mydate = datetime.datetime.now()
+    current_month = mydate.strftime( "%m" )
+    ventas = VentaNueva.objects.filter( date_added__month=current_month )
+    i = 0
+    for venta in ventas:
+        i += 1
+    return i
+
+
+@register.filter( name='last_month_sales' )
+def last_month_sales(user):
+    """Cuenta la cantidad total de ventas en el mes anterior."""
+    mydate = datetime.datetime.now()
+    current_month = mydate.strftime( "%m" )
+    ventas = VentaNueva.objects.filter( date_added__month=int(current_month) -1 )
+    i = 0
+    for venta in ventas:
+        i += 1
+    return i
