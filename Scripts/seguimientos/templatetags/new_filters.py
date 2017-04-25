@@ -25,78 +25,6 @@ def points_sum(user):
     return i
 
 
-@register.filter( name='sale_by_group_400' )
-def sale_by_group_400(user):
-    """Cuenta cantidad de ventas diarias por grupo."""
-    mydate = datetime.datetime.now()
-    current_day = mydate.strftime( "%d" )
-    ventas = VentaNueva.objects.filter( date_added__day=current_day, owner__groups=3 )
-    i = 0
-    for venta in ventas:
-        i += 1
-    return i
-
-
-@register.filter( name='sale_by_group_401' )
-def sale_by_group_401(user):
-    """Cuenta cantidad de ventas diarias por grupo."""
-    mydate = datetime.datetime.now()
-    current_day = mydate.strftime( "%d" )
-    ventas = VentaNueva.objects.filter( date_added__day=current_day, owner__groups=4 )
-    i = 0
-    for venta in ventas:
-        i += 1
-    return i
-
-
-@register.filter( name='sale_by_group_402' )
-def sale_by_group_402(user):
-    """Cuenta cantidad de ventas diarias por grupo."""
-    mydate = datetime.datetime.now()
-    current_day = mydate.strftime( "%d" )
-    ventas = VentaNueva.objects.filter( date_added__day=current_day, owner__groups=5 ) # <-- Need to fix this.
-    i = 0
-    for venta in ventas:
-        i += 1
-    return i
-
-
-@register.filter( name='sale_by_group_403' )
-def sale_by_group_403(user):
-    """Cuenta cantidad de ventas diarias por grupo."""
-    mydate = datetime.datetime.now()
-    current_day = mydate.strftime( "%d" )
-    ventas = VentaNueva.objects.filter( date_added__day=current_day, owner__groups=6 )
-    i = 0
-    for venta in ventas:
-        i += 1
-    return i
-
-
-@register.filter( name='sale_by_group_405' )
-def sale_by_group_405(user):
-    """Cuenta cantidad de ventas diarias por grupo."""
-    mydate = datetime.datetime.now()
-    current_day = mydate.strftime( "%d" )
-    ventas = VentaNueva.objects.filter( date_added__day=current_day, owner__groups=7 )
-    i = 0
-    for venta in ventas:
-        i += 1
-    return i
-
-
-@register.filter( name='sale_by_group_406' )
-def sale_by_group_406(user):
-    """Cuenta cantidad de ventas diarias por grupo."""
-    mydate = datetime.datetime.now()
-    current_day = mydate.strftime( "%d" )
-    ventas = VentaNueva.objects.filter( date_added__day=current_day, owner__groups=8 )
-    i = 0
-    for venta in ventas:
-        i += 1
-    return i
-
-
 @register.filter( name='monthly_sales' )
 def monthly_sales(user):
     """Cuenta la cantidad total de ventas en el mes actual."""
@@ -114,8 +42,34 @@ def last_month_sales(user):
     """Cuenta la cantidad total de ventas en el mes anterior."""
     mydate = datetime.datetime.now()
     current_month = mydate.strftime( "%m" )
+    if current_month == '01':
+        current_month = '13'
     ventas = VentaNueva.objects.filter( date_added__month=int(current_month) -1 )
     i = 0
     for venta in ventas:
         i += 1
     return i
+
+
+@register.filter( name='total_daily_sales' )
+def total_daily_sales(user):
+    """Cuenta cantidad de ventas diarias por grupo."""
+    mydate = datetime.datetime.now()
+    current_day = mydate.strftime( "%d" )
+    sale_locations = {"IRS0400": 0, "IRS0401": 0, "IRS0402": 0, "IRS0403": 0, "IRS0405": 0, "IRS0406": 0}
+    for loc in sale_locations.keys():
+        ventas = VentaNueva.objects.filter( date_added__day=current_day, owner__groups__name=str(loc) )
+        i = 0
+        for venta in ventas:
+            i += 1
+            sale_locations[str(loc)] = i
+
+    """ Arma una lista [group / amount] para que se visualize en el graph. """
+    list_full = []
+    list_full.append( ["Oficina" , "Cantidad de Ventas"] )
+
+    for [k, v] in sale_locations.items():
+        list_full.extend([[k, v]])
+
+    return list(list_full)
+

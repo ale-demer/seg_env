@@ -6,6 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 
 
+
 from .models import Venta, VentaNueva
 from .forms import VentaNuevaForm, LiquidacionForm
 
@@ -97,3 +98,4 @@ def editar_venta(request, venta_id):
 def stats(request):
     """Establece la página principal para las estadísticas."""
     return render(request, 'seguimientos/stats.html')
+

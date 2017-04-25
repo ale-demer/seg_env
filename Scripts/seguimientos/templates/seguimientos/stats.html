@@ -8,17 +8,55 @@
 
 {% block content %}
 	<h3>Mensual:</h3>
-	Ventas totales del mes: {{ request.user|monthly_sales }}</br>
-	Ventas totales del mes pasado: {{ request.user|last_month_sales }}
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	  <script type="text/javascript">
+	    google.charts.load('current', {packages:['corechart']});
+	    google.charts.setOnLoadCallback(drawChart);
+	  function drawChart() {
+	    var oldData = google.visualization.arrayToDataTable([
+	      ['Name', 'Cantidad'],
+	      ['Ventas mes pasado', {{ request.user|last_month_sales }}]
+	    ]);
 
+	    var newData = google.visualization.arrayToDataTable([
+	      ['Name', 'Cantidad'],
+	      ['Ventas del mes', {{ request.user|monthly_sales }}]
+	    ]);
+
+	    var colChartDiff = new google.visualization.ColumnChart(document.getElementById('colchart_diff'));
+
+	    var options = { legend: { position: 'top' } };
+
+	    var diffData = colChartDiff.computeDiff(oldData, newData);
+	    colChartDiff.draw(diffData, options);
+	  }
+	</script>
+
+	<center><div id='colchart_diff' style='width: 675px; height: 375px;'></div></center>
 
 
 	<h3>Diario:</h3>
-	Ventas cargadas hoy por el 0400: {{ request.user|sale_by_group_400 }}</br>
-	Ventas cargadas hoy por el 0401: {{ request.user|sale_by_group_401 }}</br>
-	Ventas cargadas hoy por el 0402: {{ request.user|sale_by_group_402 }}</br>
-	Ventas cargadas hoy por el 0403: {{ request.user|sale_by_group_403 }}</br>
-	Ventas cargadas hoy por el 0405: {{ request.user|sale_by_group_405 }}</br>
-	Ventas cargadas hoy por el 0406: {{ request.user|sale_by_group_406 }}
+
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        	   <script type="text/javascript">
+        	     google.charts.load("current", {packages:["corechart"]});
+        	 	    google.charts.setOnLoadCallback(drawChart);
+        	     function drawChart() {
+        	       var data = google.visualization.arrayToDataTable(
+        	       {% autoescape off %}
+                       {{ request.user|total_daily_sales }}
+	                {% endautoescape %}
+        	       );
+        	       var options = {
+        	         title: 'Ventas del día',
+        	         is3D: true,
+        	       };
+
+        	       var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+        	       chart.draw(data, options);
+        	     }
+     </script>
+	<center><div id="donutchart" style="width: 675px; height: 375px; "></div></center>
+
 
 {% endblock content %}
