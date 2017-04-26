@@ -2,61 +2,107 @@
 {% load bootstrap3 %}
 {% load new_filters %}
 
+
+
 {% block header %}
 	<h2>Estadísticas:</h2>
 {% endblock header %}
 
 {% block content %}
-	<h3>Mensual:</h3>
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	  <script type="text/javascript">
+
+    <!-- Scripts de los graphs -->
+
+    <script type="text/javascript">
 	    google.charts.load('current', {packages:['corechart']});
-	    google.charts.setOnLoadCallback(drawChart);
-	  function drawChart() {
-	    var oldData = google.visualization.arrayToDataTable([
-	      ['Name', 'Cantidad'],
-	      ['Ventas mes pasado', {{ request.user|last_month_sales }}]
-	    ]);
+	    google.charts.setOnLoadCallback(colChartMonthly);
+	    google.charts.setOnLoadCallback(pieChartDaily);
+	    google.charts.setOnLoadCallback(colChartDailyByVendor);
+	    google.charts.setOnLoadCallback(lineChartDailyPerMonth);
 
-	    var newData = google.visualization.arrayToDataTable([
-	      ['Name', 'Cantidad'],
-	      ['Ventas del mes', {{ request.user|monthly_sales }}]
-	    ]);
+	    function colChartMonthly() {
+	      var oldData = google.visualization.arrayToDataTable([
+	        ['Name', 'Cantidad'],
+	        ['Ventas mes pasado', {{ request.user|last_month_sales }}]
+	      ]);
 
-	    var colChartDiff = new google.visualization.ColumnChart(document.getElementById('colchart_diff'));
+	      var newData = google.visualization.arrayToDataTable([
+	        ['Name', 'Cantidad'],
+	        ['Ventas del mes', {{ request.user|monthly_sales }}]
+	      ]);
 
-	    var options = { legend: { position: 'top' } };
+	      var colChartDiff = new google.visualization.ColumnChart(document.getElementById('colchart_diff'));
 
-	    var diffData = colChartDiff.computeDiff(oldData, newData);
-	    colChartDiff.draw(diffData, options);
-	  }
+	      var options = { legend: { position: 'top' } };
+
+	      var diffData = colChartDiff.computeDiff(oldData, newData);
+	      colChartDiff.draw(diffData, options);
+	    }
+
+	    function pieChartDaily() {
+          var data = google.visualization.arrayToDataTable(
+          {% autoescape off %}
+              {{ request.user|total_daily_sales }}
+	       {% endautoescape %}
+          );
+          var options = {
+            title: 'Ventas del día',
+            is3D: true,
+          };
+          var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+          chart.draw(data, options);
+        }
+
+        function colChartDailyByVendor() {
+          var data = google.visualization.arrayToDataTable(
+
+                {% autoescape off %}
+                    {{ request.user|total_daily_sales_by_vendor }}
+                {% endautoescape %}
+          );
+
+          var options = {
+            title: "Ventas del día por Vendedor",
+            width: 600,
+            height: 400,
+            bar: {groupWidth: "80%"},
+            legend: { position: "none" },
+          };
+          var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
+          chart.draw(data, options);
+      }
+
+        function lineChartDailyPerMonth() {
+        var data = google.visualization.arrayToDataTable(
+            {% autoescape off %}
+                {{ request.user|total_daily_sales_per_month }}
+            {% endautoescape %}
+        );
+
+        var options = {
+          title: 'Performance diaria',
+          hAxis: {title: 'Mes actual',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('line_chart'));
+        chart.draw(data, options);
+
+      }
+
 	</script>
 
-	<center><div id='colchart_diff' style='width: 675px; height: 375px;'></div></center>
+	<h3>Mensual:</h3>
 
+	<center><div id='colchart_diff' style='width: 900px; height: 600px;'></div></center>
+
+    <center><div id="line_chart" style="width: 900px; height: 600px"></div></center>
 
 	<h3>Diario:</h3>
 
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        	   <script type="text/javascript">
-        	     google.charts.load("current", {packages:["corechart"]});
-        	 	    google.charts.setOnLoadCallback(drawChart);
-        	     function drawChart() {
-        	       var data = google.visualization.arrayToDataTable(
-        	       {% autoescape off %}
-                       {{ request.user|total_daily_sales }}
-	                {% endautoescape %}
-        	       );
-        	       var options = {
-        	         title: 'Ventas del día',
-        	         is3D: true,
-        	       };
+	<center><div id="donutchart" style="width: 900px; height: 600px; "></div></center>
 
-        	       var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-        	       chart.draw(data, options);
-        	     }
-     </script>
-	<center><div id="donutchart" style="width: 675px; height: 375px; "></div></center>
+    <h3>Vendedores:</h3>
 
+    <center><div id="barchart_values" style="width: 900px; height: 600px; "></div></center>
 
 {% endblock content %}
