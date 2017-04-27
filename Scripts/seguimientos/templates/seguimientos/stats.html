@@ -45,7 +45,7 @@
 	       {% endautoescape %}
           );
           var options = {
-            title: 'Ventas del día',
+            title: 'Ventas del día por Código',
             is3D: true,
           };
           var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
@@ -62,9 +62,9 @@
 
           var options = {
             title: "Ventas del día por Vendedor",
-            width: 600,
-            height: 400,
-            bar: {groupWidth: "80%"},
+            width: 900,
+            height: 600,
+            bar: {groupWidth: "70%"},
             legend: { position: "none" },
           };
           var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
@@ -80,7 +80,7 @@
 
         var options = {
           title: 'Performance diaria',
-          hAxis: {title: 'Mes actual',  titleTextStyle: {color: '#333'}},
+          hAxis: {title: 'Mes actual: {% now "m" %}',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0}
         };
 
@@ -101,8 +101,9 @@
 
 	<center><div id="donutchart" style="width: 900px; height: 600px; "></div></center>
 
-    <h3>Vendedores:</h3>
+    <!--h3>Vendedores:</h3-->
 
     <center><div id="barchart_values" style="width: 900px; height: 600px; "></div></center>
 
 {% endblock content %}
+

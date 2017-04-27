@@ -44,9 +44,13 @@
 					<ul class="nav navbar-nav navbar-right">
 						{% if user.is_authenticated %}
 							<li><a>Hola, {{ user.username }}.</a></li>
-							<li><a href="{% url 'usuarios:logout' %}">Cerrar sesión</a></li>
+							<li><a href="{% url 'usuarios:logout' %}">
+								<span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a>
+							</li>
 						{% else %}
-							<li><a href="{% url 'usuarios:login' %}">Iniciar sesión</a></li>
+							<li><a href="{% url 'usuarios:login' %}">
+								<span class="glyphicon glyphicon-log-in"></span> Iniciar sesión</a>
+							</li>
 						{% endif %}
 					</ul>
 				</div><!--/.nav.collapse -->
@@ -63,4 +67,21 @@
 		</div> <!-- /container -->
 	
 	</body>
+
+	<!-- Activar si lo piden! -->
+    <!--
+	<footer>
+		<div class= "navbar navbar-inverse navbar-fixed-bottom">
+			<div class="container-fluid">
+		    	<div class="navbar-text">
+		    		<p class="navbar-text pull-center">
+						<b>UNIVISION SRL</b>
+		    		</p>
+					{% now "Y" as current_year %}
+					Copyright {{ current_year }}
+				</div>
+			</div>
+		</div>
+		</footer>
+    -->
 </html>
