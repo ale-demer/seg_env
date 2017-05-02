@@ -19,12 +19,43 @@ def points_sum(user):
     mydate = datetime.datetime.now()
     current_month = mydate.strftime( "%m" )
     current_year = mydate.strftime( "%Y" )
-    ventas = VentaNueva.objects.filter( owner=user.id, payoff_date__month=current_month, date_added__year=current_year )
+    ventas = VentaNueva.objects.filter( owner=user.id, payoff_date__month=current_month, payoff_date__year=current_year )
     i = 0
     for venta in ventas:
         if venta.payoff == True and venta.status in ('Finalizada', 'OK'):
             i += venta.service
     return i
+
+
+@register.filter( name='last_month_points_sum' )
+def last_month_points_sum(user):
+    """Cuenta los puntos sumados del vendedor del mes pasado."""
+    mydate = datetime.datetime.now()
+    current_month = mydate.strftime( "%m" )
+    current_year = mydate.strftime( "%Y" )
+    if current_month == '01':
+        current_month = '13'
+        current_year = int(current_year) - 1
+
+    vendor_name = []
+    vendor_name.append( ["Vendedor" , "Cantidad"] )
+    users = User.objects.all().exclude(groups__name="Liquidaciones")
+    for user in users:
+        vendor_name.append( [user.username , 0] )
+
+    for v in range(len(vendor_name)):
+        for vendor in vendor_name[v]:
+
+            ventas = VentaNueva.objects.filter( payoff_date__month=int(current_month) - 1, payoff_date__year=current_year,
+                                            owner__username=vendor )
+            i = 0
+            for venta in ventas:
+                if venta.payoff == True and venta.status in ('Finalizada', 'OK'):
+                    i += venta.service
+                    vendor_name[v][1] = i
+
+    return vendor_name
+
 
 
 @register.filter( name='monthly_sales' )
@@ -49,7 +80,7 @@ def last_month_sales(user):
     if current_month == '01':
         current_month = '13'
         current_year = int(current_year) - 1
-    ventas = VentaNueva.objects.filter( date_added__month=int(current_month) -1, date_added__year=current_year )
+    ventas = VentaNueva.objects.filter( date_added__month=int(current_month) - 1, date_added__year=current_year )
     i = 0
     for venta in ventas:
         i += 1
@@ -72,7 +103,7 @@ def total_daily_sales(user):
             i += 1
             sale_locations[str(loc)] = i
 
-    """ Arma una lista [group / amount] para que se visualize en el graph. """
+    # Arma una lista [group / amount] para que se visualize en el graph.
     list_full = []
     list_full.append( ["Oficina" , "Cantidad de Ventas"] )
 

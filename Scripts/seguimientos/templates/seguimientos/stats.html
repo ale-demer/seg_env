@@ -18,6 +18,7 @@
 	    google.charts.setOnLoadCallback(pieChartDaily);
 	    google.charts.setOnLoadCallback(colChartDailyByVendor);
 	    google.charts.setOnLoadCallback(lineChartDailyPerMonth);
+	    google.charts.setOnLoadCallback(colChartLastMontPoints);
 
 	    function colChartMonthly() {
 	      var oldData = google.visualization.arrayToDataTable([
@@ -89,6 +90,33 @@
 
       }
 
+          function colChartLastMontPoints() {
+          var data = google.visualization.arrayToDataTable(
+
+                {% autoescape off %}
+                    {{ request.user|last_month_points_sum }}
+                {% endautoescape %}
+          );
+
+          var view = new google.visualization.DataView(data);
+      	  view.setColumns([0, 1, { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" }]);
+
+          var options = {
+            title: "Puntos sumados del mes anterior",
+            width: 900,
+            height: 600,
+            bar: {groupWidth: "70%"},
+            legend: { position: "none" },
+            dataOpacity: 0.3,
+
+          };
+          var chart = new google.visualization.BarChart(document.getElementById("barchart_lastmonth"));
+          chart.draw(view, data, options);
+      }
+
 	</script>
 
 	<h3>Mensual:</h3>
@@ -101,9 +129,11 @@
 
 	<center><div id="donutchart" style="width: 900px; height: 600px; "></div></center>
 
-    <!--h3>Vendedores:</h3-->
-
     <center><div id="barchart_values" style="width: 900px; height: 600px; "></div></center>
+
+    <h3>Mes pasado:</h3>
+
+	<center><div id="barchart_lastmonth" style="width: 900px; height: 600px; "></div></center>
 
 {% endblock content %}
 
