@@ -1,7 +1,7 @@
 """Define URLs para seguimientos."""
 
 from django.conf.urls import url
-from django.contrib.auth.views import login
+from django.contrib.auth.views import login, password_change
 
 from . import views
 
@@ -11,5 +11,9 @@ urlpatterns = [
 	
 	# Pagina de cierre de sesión.
 	url(r'^logout/$', views.logout_view, name='logout'),
+
+	# Pagina de cambio de password.
+    url( '^change-password/$' , password_change , {'post_change_redirect': 'seguimientos.next_page'} ,
+         name='password_change' ) ,
 
 ]

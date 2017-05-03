@@ -17,7 +17,7 @@
     <div class="alert alert-success alert-dismissable fade in">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             {% for message in messages %}
-            <strong>{{ message }}</strong>
+            <strong>{{ message }}</strong>&nbsp;<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>
             {% endfor %}
     </div>
     {% endif %}
@@ -59,7 +59,7 @@
 		No hay ventas cargadas para este usuario.
 	{% endfor %}
 
-
+		<!-- Paginator -->
         <ul class="pager">
             {% if ventas_nuevas.has_previous %}
             <li class="previous"><a href="?page={{ ventas_nuevas.previous_page_number }}" class="btn btn">Anterior</a></li>
@@ -73,6 +73,7 @@
             {% endif %}
 
         </ul>
+		<!-- End Paginator -->
 
 {% endblock content %}
 

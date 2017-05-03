@@ -7,7 +7,7 @@ from django.contrib import messages
 
 
 
-from .models import Venta, VentaNueva
+from .models import Venta, VentaNueva, User
 from .forms import VentaNuevaForm, LiquidacionForm
 
 
@@ -75,11 +75,12 @@ def venta_nueva(request, venta_id):
 @login_required
 def editar_venta(request, venta_id):
     """Editar una venta cargada recientemente."""
+    users = User.objects.all()
     venta_nueva = get_object_or_404(VentaNueva, id=venta_id)
     venta = venta_nueva.venta
 
     if request.method != 'POST':
-        # Rellena el formulario con los datos ya cargados.
+        # Crea formulario nuevo.
         form = LiquidacionForm(instance=venta_nueva)
     else:
         # Hay datos en POST, procesamos el formulario con los datos cargados.
@@ -87,8 +88,16 @@ def editar_venta(request, venta_id):
         if form.is_valid():
             form.save()
             messages.success( request , 'Datos actualizados' )
+            # Si la venta pasa a Liquidada, se le envía un mail al vendedor informandole.
+            if form['payoff'].value() == True:
+                users.get( id=venta.owner_id ).email_user( 'Tu venta de ' + venta_nueva.name + ' ' + venta_nueva.surname +
+                                                           ' ha sido liquidada!',
+                                                           'Email generado automáticamente, no respondas a este correo.',
+                                                           from_email='sistema@univisiononline.com.ar' )
+
             return HttpResponseRedirect(reverse('seguimientos:venta',
                                                 args=[venta.id]))
+
 
     context = {'venta_nueva': venta_nueva, 'venta': venta, 'form': form}
     return render(request, 'seguimientos/editar_venta.html', context)

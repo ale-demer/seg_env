@@ -61,6 +61,12 @@
                 {% endautoescape %}
           );
 
+          var view = new google.visualization.DataView(data);
+      	  view.setColumns([0, 1, { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation"}]);
+
           var options = {
             title: "Ventas del día por Vendedor",
             width: 900,
@@ -69,7 +75,7 @@
             legend: { position: "none" },
           };
           var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
-          chart.draw(data, options);
+          chart.draw(view, data, options);
       }
 
         function lineChartDailyPerMonth() {
@@ -110,7 +116,6 @@
             height: 600,
             bar: {groupWidth: "70%"},
             legend: { position: "none" },
-            dataOpacity: 0.3,
 
           };
           var chart = new google.visualization.BarChart(document.getElementById("barchart_lastmonth"));

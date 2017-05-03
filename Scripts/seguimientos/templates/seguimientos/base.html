@@ -1,4 +1,5 @@
 {% load bootstrap3 %}
+{% load staticfiles %}
 {% load new_filters %}
 
 <!DOCTYPE html>
@@ -7,6 +8,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
 		
 		<title>Sistema de Liquidaciones UNIVISION</title>
 		
@@ -16,6 +18,10 @@
 		{% bootstrap_javascript %}
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <style>
+            body { padding-bottom: 70px; }
+        </style>
 
 	</head>
 	
@@ -44,6 +50,8 @@
 					<ul class="nav navbar-nav navbar-right">
 						{% if user.is_authenticated %}
 							<li><a>Hola, {{ user.username }}.</a></li>
+                            <li><a href="{% url 'usuarios:password_change' %}">
+                                <span class="glyphicon glyphicon-wrench"></span> Cambiar contraseña</a></li>
 							<li><a href="{% url 'usuarios:logout' %}">
 								<span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a>
 							</li>
@@ -68,20 +76,17 @@
 	
 	</body>
 
-	<!-- Activar si lo piden! -->
-    <!--
 	<footer>
-		<div class= "navbar navbar-inverse navbar-fixed-bottom">
-			<div class="container-fluid">
-		    	<div class="navbar-text">
-		    		<p class="navbar-text pull-center">
-						<b>UNIVISION SRL</b>
-		    		</p>
+		<div class= "navbar navbar-inner navbar-inverse navbar-fixed-bottom">
+			<div class="container-fluid navbar-text pull-right">
+					<small>
 					{% now "Y" as current_year %}
 					Copyright {{ current_year }}
-				</div>
+					<span class="glyphicon glyphicon-copyright-mark"></span>
+					<b>UNIVISION SRL</b>
+					</small>
 			</div>
 		</div>
-		</footer>
-    -->
+	</footer>
+
 </html>
