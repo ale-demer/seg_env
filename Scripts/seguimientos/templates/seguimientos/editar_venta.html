@@ -17,6 +17,12 @@
 		{% bootstrap_form form %}
 
 		<div class="container" style="text-align: center">
+			{% now "d" as current_day %}
+				{% if current_day >= '28' %}
+					<div class="label label-danger">
+  						<strong>Atención!</strong> Se pasó la fecha límite de liquidación.
+					</div>
+				{% endif %}
 			<h5>Vendedor: <span class="label label-default">{{ venta_nueva.owner }}</span></h5>
 		</div>
 

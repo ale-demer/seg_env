@@ -108,18 +108,22 @@
       	  view.setColumns([0, 1, { calc: "stringify",
                          sourceColumn: 1,
                          type: "string",
+                         role: "annotation" }, 2, { calc: "stringify",
+                         sourceColumn: 2,
+                         type: "string",
                          role: "annotation" }]);
 
           var options = {
-            title: "Puntos sumados del mes anterior",
+            title: "Puntos y ventas sumados del mes anterior",
             width: 900,
-            height: 600,
-            bar: {groupWidth: "70%"},
-            legend: { position: "none" },
+            height: 800,
+            bar: {groupWidth: "40%"},
+            legend: { position: "right" },
+            isStacked: true,
 
           };
           var chart = new google.visualization.BarChart(document.getElementById("barchart_lastmonth"));
-          chart.draw(view, data, options);
+          chart.draw(view, options);
       }
 
 	</script>
@@ -128,17 +132,19 @@
 
 	<center><div id='colchart_diff' style='width: 900px; height: 600px;'></div></center>
 
-    <center><div id="line_chart" style="width: 900px; height: 600px"></div></center>
+    <h3>Diario:</h3>
+    <hr>
 
-	<h3>Diario:</h3>
+    <center><div id="line_chart" style="width: 900px; height: 600px"></div></center>
 
 	<center><div id="donutchart" style="width: 900px; height: 600px; "></div></center>
 
     <center><div id="barchart_values" style="width: 900px; height: 600px; "></div></center>
 
     <h3>Mes pasado:</h3>
+    <hr>
 
-	<center><div id="barchart_lastmonth" style="width: 900px; height: 600px; "></div></center>
+	<center><div id="barchart_lastmonth" style="width: 900px; height: 800px; "></div></center>
 
 {% endblock content %}
 

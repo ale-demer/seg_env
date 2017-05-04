@@ -38,10 +38,10 @@ def last_month_points_sum(user):
         current_year = int(current_year) - 1
 
     vendor_name = []
-    vendor_name.append( ["Vendedor" , "Cantidad"] )
+    vendor_name.append( ["Vendedor" , "Cant Ventas", "Puntos"] )
     users = User.objects.all().exclude(groups__name="Liquidaciones")
     for user in users:
-        vendor_name.append( [user.username , 0] )
+        vendor_name.append( [user.username , 0, 0] )
 
     for v in range(len(vendor_name)):
         for vendor in vendor_name[v]:
@@ -49,10 +49,13 @@ def last_month_points_sum(user):
             ventas = VentaNueva.objects.filter( payoff_date__month=int(current_month) - 1, payoff_date__year=current_year,
                                             owner__username=vendor )
             i = 0
+            j = 0
             for venta in ventas:
                 if venta.payoff == True and venta.status in ('Finalizada', 'OK'):
-                    i += venta.service
+                    i += 1
+                    j += venta.service
                     vendor_name[v][1] = i
+                    vendor_name[v][2] = j
 
     return vendor_name
 
