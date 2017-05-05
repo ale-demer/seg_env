@@ -40,6 +40,9 @@ INSTALLED_APPS = [
 	
 	# Inicializacion de Bootstrap 
 	'bootstrap3',
+
+    # Django-Watson
+    'watson',
 	
 	# Mis aplicaciones.
 	'seguimientos',

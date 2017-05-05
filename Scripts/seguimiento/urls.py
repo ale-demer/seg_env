@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 	url(r'^usuarios/', include('usuarios.urls', namespace='usuarios')),
 	url(r'', include('seguimientos.urls', namespace='seguimientos')),
+	url( r"^search/" , include( "watson.urls" , namespace="watson" ) ),
 ]

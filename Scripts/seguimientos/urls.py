@@ -23,4 +23,5 @@ urlpatterns = [
 	# Pagina de estadisticas.
 	url(r'^stats/$', views.stats, name='stats'),
 
+
 ]
