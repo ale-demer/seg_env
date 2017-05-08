@@ -55,7 +55,6 @@
 			</div>
         </div> <!-- panel -->
 
-
 	{% empty %}
 		No hay ventas cargadas para este usuario.
 	{% endfor %}
@@ -63,16 +62,15 @@
 		<!-- Paginator -->
         <ul class="pager">
             {% if ventas_nuevas.has_previous %}
-            <li class="previous"><a href="?page={{ ventas_nuevas.previous_page_number }}" class="btn btn">Anterior</a></li>
+            <li class="previous"><a href="?page={{ ventas_nuevas.previous_page_number }}" class="btn btn">< Anterior</a></li>
             {% endif %}
             <span class="current" style="color:grey">
                 Página {{ ventas_nuevas.number }} de {{ ventas_nuevas.paginator.num_pages }}
             </span>
             {% if ventas_nuevas.has_next %}
-            <li class="next"><a href="?page={{ ventas_nuevas.end_index }}" class="btn btn">Última página</a></li>
-            <li class="next"><a href="?page={{ ventas_nuevas.next_page_number }}" class="btn btn">Siguiente</a></li>
+            <li class="next"><a href="?page={{ ventas_nuevas.end_index }}" class="btn btn">Última página >></a></li>
+            <li class="next"><a href="?page={{ ventas_nuevas.next_page_number }}" class="btn btn">Siguiente ></a></li>
             {% endif %}
-
         </ul>
 		<!-- End Paginator -->
 

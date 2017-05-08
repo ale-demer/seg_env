@@ -19,7 +19,9 @@ def points_sum(user):
     mydate = datetime.datetime.now()
     current_month = mydate.strftime( "%m" )
     current_year = mydate.strftime( "%Y" )
-    ventas = VentaNueva.objects.filter( owner=user.id, payoff_date__month=current_month, payoff_date__year=current_year )
+    ventas = VentaNueva.objects.filter( owner=user.id,
+                                        payoff_date__month=current_month,
+                                        payoff_date__year=current_year )
     i = 0
     for venta in ventas:
         if venta.payoff == True and venta.status in ('Finalizada', 'OK'):
@@ -46,8 +48,9 @@ def last_month_points_sum(user):
     for v in range(len(vendor_name)):
         for vendor in vendor_name[v]:
 
-            ventas = VentaNueva.objects.filter( payoff_date__month=int(current_month) - 1, payoff_date__year=current_year,
-                                            owner__username=vendor )
+            ventas = VentaNueva.objects.filter( payoff_date__month=int(current_month) - 1,
+                                                payoff_date__year=current_year,
+                                                owner__username=vendor )
             i = 0
             j = 0
             for venta in ventas:
@@ -60,14 +63,14 @@ def last_month_points_sum(user):
     return vendor_name
 
 
-
 @register.filter( name='monthly_sales' )
 def monthly_sales(user):
     """Cuenta la cantidad total de ventas en el mes actual."""
     mydate = datetime.datetime.now()
     current_month = mydate.strftime( "%m" )
     current_year = mydate.strftime( "%Y" )
-    ventas = VentaNueva.objects.filter( date_added__month=current_month, date_added__year=current_year )
+    ventas = VentaNueva.objects.filter( date_added__month=current_month,
+                                        date_added__year=current_year )
     i = 0
     for venta in ventas:
         i += 1
@@ -83,7 +86,8 @@ def last_month_sales(user):
     if current_month == '01':
         current_month = '13'
         current_year = int(current_year) - 1
-    ventas = VentaNueva.objects.filter( date_added__month=int(current_month) - 1, date_added__year=current_year )
+    ventas = VentaNueva.objects.filter( date_added__month=int(current_month) - 1,
+                                        date_added__year=current_year )
     i = 0
     for venta in ventas:
         i += 1
@@ -99,8 +103,10 @@ def total_daily_sales(user):
     current_year = mydate.strftime( "%Y" )
     sale_locations = {"IRS0400": 0, "IRS0401": 0, "IRS0402": 0, "IRS0403": 0, "IRS0405": 0, "IRS0406": 0}
     for loc in sale_locations.keys():
-        ventas = VentaNueva.objects.filter( date_added__day=current_day, date_added__month=current_month,
-                                                date_added__year=current_year, owner__groups__name=str(loc) )
+        ventas = VentaNueva.objects.filter( date_added__day=current_day,
+                                            date_added__month=current_month,
+                                            date_added__year=current_year,
+                                            owner__groups__name=str(loc) )
         i = 0
         for venta in ventas:
             i += 1
@@ -131,8 +137,10 @@ def total_daily_sales_by_vendor(user):
 
     for v in range(len(vendor_name)):
         for vendor in vendor_name[v]:
-            ventas = VentaNueva.objects.filter( date_added__day=current_day, date_added__month=current_month,
-                                                date_added__year=current_year, owner__username=vendor )
+            ventas = VentaNueva.objects.filter( date_added__day=current_day,
+                                                date_added__month=current_month,
+                                                date_added__year=current_year,
+                                                owner__username=vendor )
             i = 0
             for venta in ventas:
                 i += 1
@@ -155,7 +163,8 @@ def total_daily_sales_per_month(user):
 
     for d in range(len(days_list)):
         for day in days_list[d]:
-            ventas = VentaNueva.objects.filter( date_added__day=str(d), date_added__month=current_month,
+            ventas = VentaNueva.objects.filter( date_added__day=str(d),
+                                                date_added__month=current_month,
                                                 date_added__year=current_year)
             i = 0
             for venta in ventas:

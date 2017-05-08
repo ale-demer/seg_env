@@ -78,4 +78,4 @@ class VentaNueva(models.Model):
 
     def __str__(self):
         """Devuelve una representacion textual del modelo."""
-        return "DNI: " + str(self.client) + " - " + self.surname + " de " + self.location
+        return "DNI: " + str(self.client) + " - " + self.name + " " + self.surname + " de " + self.location + "."

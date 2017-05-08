@@ -90,7 +90,7 @@ def editar_venta(request, venta_id):
             messages.success( request , 'Datos actualizados' )
             # Si la venta pasa a Liquidada, se le envía un mail al vendedor informandole.
             if form['payoff'].value() == True:
-                users.get( id=venta.owner_id ).email_user( 'Tu venta de ' + venta_nueva.name + ' ' + venta_nueva.surname +
+                users.get( id=venta_nueva.owner_id ).email_user( 'Tu venta de ' + venta_nueva.name + ' ' + venta_nueva.surname +
                                                            ' ha sido liquidada!',
                                                            'Email generado automáticamente, no respondas a este correo.',
                                                            from_email='sistema@univisiononline.com.ar' )

@@ -33,7 +33,10 @@
 
 	      var colChartDiff = new google.visualization.ColumnChart(document.getElementById('colchart_diff'));
 
-	      var options = { legend: { position: 'top' } };
+	      var options = {
+	        title: "Ventas totales del mes",
+	        legend: { position: 'right' }
+	      };
 
 	      var diffData = colChartDiff.computeDiff(oldData, newData);
 	      colChartDiff.draw(diffData, options);
@@ -75,7 +78,7 @@
             legend: { position: "none" },
           };
           var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
-          chart.draw(view, data, options);
+          chart.draw(view, options);
       }
 
         function lineChartDailyPerMonth() {
@@ -88,7 +91,8 @@
         var options = {
           title: 'Performance diaria',
           hAxis: {title: 'Mes actual: {% now "m" %}',  titleTextStyle: {color: '#333'}},
-          vAxis: {minValue: 0}
+          vAxis: {minValue: 0},
+          legend: { position: "none" },
         };
 
         var chart = new google.visualization.AreaChart(document.getElementById('line_chart'));
@@ -108,7 +112,8 @@
       	  view.setColumns([0, 1, { calc: "stringify",
                          sourceColumn: 1,
                          type: "string",
-                         role: "annotation" }, 2, { calc: "stringify",
+                         role: "annotation" },
+                         2, { calc: "stringify",
                          sourceColumn: 2,
                          type: "string",
                          role: "annotation" }]);

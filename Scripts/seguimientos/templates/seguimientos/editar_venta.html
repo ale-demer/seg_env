@@ -17,18 +17,25 @@
 		{% bootstrap_form form %}
 
 		<div class="container" style="text-align: center">
+			<h5>Vendedor: <span class="label label-default">{{ venta_nueva.owner }}</span></h5>
+
 			{% now "d" as current_day %}
 				{% if current_day >= '28' %}
 					<div class="label label-danger">
   						<strong>Atención!</strong> Se pasó la fecha límite de liquidación.
 					</div>
+					<hr>
+					{% buttons %}
+						<fieldset disabled>
+							<button name='submit' class="btn btn-success btn-block">Guardar</button>
+						</fieldset>
+					{% endbuttons %}
+				{% else %}
+					{% buttons %}
+						<button name='submit' class="btn btn-success btn-block">Guardar</button>
+					{% endbuttons %}
 				{% endif %}
-			<h5>Vendedor: <span class="label label-default">{{ venta_nueva.owner }}</span></h5>
 		</div>
-
-		{% buttons %}
-			<button name='submit' class="btn btn-success btn-block">Guardar</button>
-		{% endbuttons %}
 	</form>
 {% else %}
 No tenés permiso para liquidar.
