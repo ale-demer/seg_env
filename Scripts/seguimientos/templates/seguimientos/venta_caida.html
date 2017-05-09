@@ -31,9 +31,9 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<small>
-					{{ venta_nueva.date_added|date:'d/m/Y H:i' }}  |  
+					{{ venta_nueva.date_added|date:'d/m/Y H:i' }}  |
 					<b>
-					Liquidada: {% if venta_nueva.payoff == False %} 
+					Liquidada: {% if venta_nueva.payoff == False %}
 						<span style="color:red" class="glyphicon glyphicon-remove"></span>
 					{% else %}
 						<span style="color:green" class="glyphicon glyphicon-ok"></span>
@@ -54,7 +54,7 @@
 			<div class="panel-body">
 				<small>
 				<b>{{ venta_nueva.name }} {{ venta_nueva.surname }}</b> -
-				{{ venta_nueva.address }} - {{ venta_nueva.location }} | 
+				{{ venta_nueva.address }} - {{ venta_nueva.location }} |
 				<strong>DNI: {{ venta_nueva.client }}</strong>
 				</small>
 			</div>

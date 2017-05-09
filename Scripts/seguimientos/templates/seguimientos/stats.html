@@ -17,8 +17,10 @@
 	    google.charts.setOnLoadCallback(colChartMonthly);
 	    google.charts.setOnLoadCallback(pieChartDaily);
 	    google.charts.setOnLoadCallback(colChartDailyByVendor);
+	    google.charts.setOnLoadCallback(colChartMonthlyByVendor);
 	    google.charts.setOnLoadCallback(lineChartDailyPerMonth);
-	    google.charts.setOnLoadCallback(colChartLastMontPoints);
+	    google.charts.setOnLoadCallback(colChartLastMonthPoints);
+	    google.charts.setOnLoadCallback(colChartCurrentMonthPoints);
 
 	    function colChartMonthly() {
 	      var oldData = google.visualization.arrayToDataTable([
@@ -35,7 +37,9 @@
 
 	      var options = {
 	        title: "Ventas totales del mes",
-	        legend: { position: 'right' }
+	        fontSize: 10,
+	        legend: { position: "none" },
+	        diff: { newData: { widthFactor: 0.6 }, oldData: { widthFactor: 0.8 } }
 	      };
 
 	      var diffData = colChartDiff.computeDiff(oldData, newData);
@@ -72,12 +76,39 @@
 
           var options = {
             title: "Ventas del día por Vendedor",
-            width: 900,
+            width: 500,
             height: 600,
-            bar: {groupWidth: "70%"},
+            fontSize: 10,
+            bar: {groupWidth: "80%"},
             legend: { position: "none" },
           };
           var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
+          chart.draw(view, options);
+      }
+
+      function colChartMonthlyByVendor() {
+          var data = google.visualization.arrayToDataTable(
+
+                {% autoescape off %}
+                    {{ request.user|total_monthly_sales_by_vendor }}
+                {% endautoescape %}
+          );
+
+          var view = new google.visualization.DataView(data);
+      	  view.setColumns([0, 1, { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation"}]);
+
+          var options = {
+            title: "Ventas del mes por Vendedor",
+            width: 550,
+            height: 600,
+            fontSize: 10,
+            bar: {groupWidth: "80%"},
+            legend: { position: "none" },
+          };
+          var chart = new google.visualization.BarChart(document.getElementById("barchart_values_month"));
           chart.draw(view, options);
       }
 
@@ -92,6 +123,8 @@
           title: 'Performance diaria',
           hAxis: {title: 'Mes actual: {% now "m" %}',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0},
+          fontSize: 10,
+          colors:['red','#004411'],
           legend: { position: "none" },
         };
 
@@ -100,7 +133,7 @@
 
       }
 
-          function colChartLastMontPoints() {
+      function colChartLastMonthPoints() {
           var data = google.visualization.arrayToDataTable(
 
                 {% autoescape off %}
@@ -120,9 +153,10 @@
 
           var options = {
             title: "Puntos y ventas sumados del mes anterior",
-            width: 900,
+            width: 500,
             height: 800,
-            bar: {groupWidth: "40%"},
+            fontSize: 10,
+            bar: {groupWidth: "80%"},
             legend: { position: "right" },
             isStacked: true,
 
@@ -131,25 +165,66 @@
           chart.draw(view, options);
       }
 
+      function colChartCurrentMonthPoints() {
+          var data = google.visualization.arrayToDataTable(
+
+                {% autoescape off %}
+                    {{ request.user|current_month_points_sum }}
+                {% endautoescape %}
+          );
+
+          var view = new google.visualization.DataView(data);
+      	  view.setColumns([0, 1, { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                         2, { calc: "stringify",
+                         sourceColumn: 2,
+                         type: "string",
+                         role: "annotation" }]);
+
+          var options = {
+            title: "Puntos y ventas sumados del mes actual",
+            width: 500,
+            height: 800,
+            fontSize: 10,
+            bar: {groupWidth: "80%"},
+            legend: {position: 'right'},
+            isStacked: true,
+
+          };
+          var chart = new google.visualization.BarChart(document.getElementById("barchart_currentmonth"));
+          chart.draw(view, options);
+      }
+
 	</script>
 
-	<h3>Mensual:</h3>
+    <div class="container">
+        <div class="row">
+            <h3>Mensual:</h3>
 
-	<center><div id='colchart_diff' style='width: 900px; height: 600px;'></div></center>
+	        <div class="col-md-2" id='colchart_diff' style='width: 500px; height: 600px;'></div>
+            <div class="col-md-4" id="barchart_values_month" style="width: 550px; height: 600px; "></div>
+        </div>
 
-    <h3>Diario:</h3>
-    <hr>
+        <div class="row">
+            <h3>Diario:</h3>
+            <hr>
 
-    <center><div id="line_chart" style="width: 900px; height: 600px"></div></center>
+            <div class="col-md-2" id="line_chart" style="width: 550px; height: 600px"></div>
+            <div class="col-md-4" id="barchart_values" style="width: 500px; height: 600px; "></div>
+	        <center><div class="col-md-4" id="donutchart" style="width: 900px; height: 600px; "></div></center>
 
-	<center><div id="donutchart" style="width: 900px; height: 600px; "></div></center>
+        </div>
 
-    <center><div id="barchart_values" style="width: 900px; height: 600px; "></div></center>
+        <div class="row">
+            <h3>Mes pasado:</h3>
+            <hr>
 
-    <h3>Mes pasado:</h3>
-    <hr>
-
-	<center><div id="barchart_lastmonth" style="width: 900px; height: 800px; "></div></center>
+	        <div class="col-md-2" id="barchart_lastmonth" style="width: 500px; height: 800px; "></div>
+            <div class="col-md-2" id="barchart_currentmonth" style="width: 500px; height: 800px; "></div>
+        </div>
+    </div>
 
 {% endblock content %}
 

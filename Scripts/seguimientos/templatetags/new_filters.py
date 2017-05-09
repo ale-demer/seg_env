@@ -63,6 +63,37 @@ def last_month_points_sum(user):
     return vendor_name
 
 
+@register.filter( name='current_month_points_sum' )
+def current_month_points_sum(user):
+    """Cuenta los puntos sumados del vendedor del mes en curso."""
+    mydate = datetime.datetime.now()
+    current_month = mydate.strftime( "%m" )
+    current_year = mydate.strftime( "%Y" )
+
+    vendor_name = []
+    vendor_name.append( ["Vendedor" , "Cant Ventas", "Puntos"] )
+    users = User.objects.all().exclude(groups__name="Liquidaciones")
+    for user in users:
+        vendor_name.append( [user.username , 0, 0] )
+
+    for v in range(len(vendor_name)):
+        for vendor in vendor_name[v]:
+
+            ventas = VentaNueva.objects.filter( payoff_date__month=current_month,
+                                                payoff_date__year=current_year,
+                                                owner__username=vendor )
+            i = 0
+            j = 0
+            for venta in ventas:
+                if venta.payoff == True and venta.status in ('Finalizada', 'OK'):
+                    i += 1
+                    j += venta.service
+                    vendor_name[v][1] = i
+                    vendor_name[v][2] = j
+
+    return vendor_name
+
+
 @register.filter( name='monthly_sales' )
 def monthly_sales(user):
     """Cuenta la cantidad total de ventas en el mes actual."""
@@ -139,6 +170,31 @@ def total_daily_sales_by_vendor(user):
         for vendor in vendor_name[v]:
             ventas = VentaNueva.objects.filter( date_added__day=current_day,
                                                 date_added__month=current_month,
+                                                date_added__year=current_year,
+                                                owner__username=vendor )
+            i = 0
+            for venta in ventas:
+                i += 1
+                vendor_name[v][1] = i
+
+    return vendor_name
+
+
+@register.filter( name='total_monthly_sales_by_vendor' )
+def total_monthly_sales_by_vendor(user):
+    """Cuenta cantidad de ventas mensuales POR VENDEDOR."""
+    mydate = datetime.datetime.now()
+    current_month = mydate.strftime( "%m" )
+    current_year = mydate.strftime( "%Y" )
+    vendor_name = []
+    vendor_name.append( ["Vendedor" , "Cantidad"] )
+    users = User.objects.all().exclude(groups__name="Liquidaciones")
+    for user in users:
+        vendor_name.append( [user.username , 0] )
+
+    for v in range(len(vendor_name)):
+        for vendor in vendor_name[v]:
+            ventas = VentaNueva.objects.filter( date_added__month=current_month,
                                                 date_added__year=current_year,
                                                 owner__username=vendor )
             i = 0

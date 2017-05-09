@@ -31,11 +31,11 @@ def venta(request, venta_id):
 
     try:
         if request.user.groups.filter( name='Liquidaciones' ).exists():
-            paginator = Paginator( venta.ventanueva_set.order_by( 'payoff' , '-date_added' ) , 25 )
+            paginator = Paginator( venta.ventanueva_set.order_by( 'payoff' , '-date_added' ).filter(status='Finalizada') , 25 )
             page = request.GET.get( 'page' )
             ventas_nuevas = paginator.page( page )
         else:
-            paginator = Paginator( venta.ventanueva_set.order_by( 'payoff' , '-date_added' ).filter( owner=request.user ) , 25 )
+            paginator = Paginator( venta.ventanueva_set.order_by( 'payoff' , '-date_added' ).filter( owner=request.user, status='Finalizada' ) , 25 )
             page = request.GET.get( 'page' )
             ventas_nuevas = paginator.page( page )
     except PageNotAnInteger:
@@ -47,6 +47,31 @@ def venta(request, venta_id):
 
     context = {'venta': venta , 'ventas_nuevas': ventas_nuevas}
     return render(request, 'seguimientos/venta.html', context)
+
+
+@login_required
+def venta_caida(request, venta_id):
+    """Muestra una categoría de venta y todas las ventas caidas."""
+    venta = get_object_or_404(Venta, id=venta_id)
+
+    try:
+        if request.user.groups.filter( name='Liquidaciones' ).exists():
+            paginator = Paginator( venta.ventanueva_set.order_by( 'payoff' , '-date_added' ).exclude(status='Finalizada') , 25 )
+            page = request.GET.get( 'page' )
+            ventas_nuevas = paginator.page( page )
+        else:
+            paginator = Paginator( venta.ventanueva_set.order_by( 'payoff' , '-date_added' ).filter( owner=request.user ).exclude(status='Finalizada') , 25 )
+            page = request.GET.get( 'page' )
+            ventas_nuevas = paginator.page( page )
+    except PageNotAnInteger:
+        # Si la página no es un int, devuelve la primera página.
+        ventas_nuevas = paginator.page( 1 )
+    except EmptyPage:
+        # Si la página esta fuera del rango, devuelve la última página.
+        ventas_nuevas = paginator.page( paginator.num_pages )
+
+    context = {'venta': venta, 'venta_caida': venta_caida, 'ventas_nuevas': ventas_nuevas}
+    return render(request, 'seguimientos/venta_caida.html', context)
 
 
 @login_required
@@ -93,6 +118,13 @@ def editar_venta(request, venta_id):
                 users.get( id=venta_nueva.owner_id ).email_user( 'Tu venta de ' + venta_nueva.name + ' ' + venta_nueva.surname +
                                                            ' ha sido liquidada!',
                                                            'Email generado automáticamente, no respondas a este correo.',
+                                                           from_email='sistema@univisiononline.com.ar' )
+            # Si la venta pasa a Rechazada, se le envía un mail al vendedor diciendo la razón.
+            if form['status'].value() in ('Venta Caída', 'Rechazada'):
+                users.get( id=venta_nueva.owner_id ).email_user( 'Tu venta de ' + venta_nueva.name + ' ' + venta_nueva.surname +
+                                                           ' ha sido RECHAZADA.',
+                                                           'Venta rechazada por ' + venta_nueva.reason + '.' +
+                                                           ' Email generado automáticamente, no respondas a este correo.',
                                                            from_email='sistema@univisiononline.com.ar' )
 
             return HttpResponseRedirect(reverse('seguimientos:venta',

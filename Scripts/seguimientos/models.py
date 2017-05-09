@@ -56,6 +56,7 @@ class VentaNueva(models.Model):
     payoff = models.BooleanField(default=False)
     sds = models.IntegerField(default=0)
     payoff_date = models.DateTimeField(auto_now=True)
+    reason = models.CharField(max_length=100)
 
     # Describimos los tipos de estado posibles.
     FI = 'Finalizada'

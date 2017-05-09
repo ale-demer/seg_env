@@ -28,7 +28,7 @@ class LiquidacionForm(VentaNuevaForm):
         model = VentaNueva
         fields = ['client', 'name', 'surname', 'address', 'location', 'service',
                   'payment', 'cash_amount', 'mix_amount', 'only_amount', 'hd_amount', 'sds',
-                  'payoff', 'status' ]
+                  'payoff', 'status', 'reason' ]
         labels = {'client': 'Nro de DNI' ,
                   'name': 'Nombre' ,
                   'surname': 'Apellido' ,
@@ -43,6 +43,7 @@ class LiquidacionForm(VentaNuevaForm):
                   'sds': 'Nro de Cliente' ,
                   'payoff': 'Liquidada' ,
                   'status': 'Estado' ,
+                  'reason': 'Motivo de rechazo'
                   }
         widgets = {'sds': forms.NumberInput( attrs={'class': 'from-control'}) ,
                    'payoff': forms.CheckboxInput( attrs={'class': 'checkbox', 'data-toggle': "toggle", 'data-on': "Liquidada!",
