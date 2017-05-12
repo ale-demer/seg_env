@@ -40,7 +40,7 @@ def last_month_points_sum(user):
         current_year = int(current_year) - 1
 
     vendor_name = []
-    vendor_name.append( ["Vendedor" , "Cant Ventas", "Puntos"] )
+    vendor_name.append( ["Vendedor" , "Ventas", "Puntos"] )
     users = User.objects.all().exclude(groups__name="Liquidaciones")
     for user in users:
         vendor_name.append( [user.username , 0, 0] )
@@ -71,7 +71,7 @@ def current_month_points_sum(user):
     current_year = mydate.strftime( "%Y" )
 
     vendor_name = []
-    vendor_name.append( ["Vendedor" , "Cant Ventas", "Puntos"] )
+    vendor_name.append( ["Vendedor" , "Ventas", "Puntos"] )
     users = User.objects.all().exclude(groups__name="Liquidaciones")
     for user in users:
         vendor_name.append( [user.username , 0, 0] )

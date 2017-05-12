@@ -3,7 +3,6 @@
 {% load new_filters %}
 
 
-
 {% block header %}
 	<h2>Estadísticas:</h2>
 {% endblock header %}
@@ -39,6 +38,7 @@
 	        title: "Ventas totales del mes",
 	        fontSize: 10,
 	        legend: { position: "none" },
+	        colors:['#0080ff'],
 	        diff: { newData: { widthFactor: 0.6 }, oldData: { widthFactor: 0.8 } }
 	      };
 
@@ -54,6 +54,7 @@
           );
           var options = {
             title: 'Ventas del día por Código',
+            colors:['#0080ff', '#0060ff', '#0040ff', '#0020ff', '#0000ff', '#0100ff', ],
             is3D: true,
           };
           var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
@@ -80,6 +81,7 @@
             height: 600,
             fontSize: 10,
             bar: {groupWidth: "80%"},
+            colors:['#0080ff'],
             legend: { position: "none" },
           };
           var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
@@ -105,6 +107,7 @@
             width: 550,
             height: 600,
             fontSize: 10,
+            colors:['#0080ff'],
             bar: {groupWidth: "80%"},
             legend: { position: "none" },
           };
@@ -112,7 +115,7 @@
           chart.draw(view, options);
       }
 
-        function lineChartDailyPerMonth() {
+      function lineChartDailyPerMonth() {
         var data = google.visualization.arrayToDataTable(
             {% autoescape off %}
                 {{ request.user|total_daily_sales_per_month }}
@@ -124,7 +127,7 @@
           hAxis: {title: 'Mes actual: {% now "m" %}',  titleTextStyle: {color: '#333'}},
           vAxis: {minValue: 0},
           fontSize: 10,
-          colors:['red','#004411'],
+          colors:['#0060ff'],
           legend: { position: "none" },
         };
 
@@ -157,6 +160,7 @@
             height: 800,
             fontSize: 10,
             bar: {groupWidth: "80%"},
+            colors:['#0020ff', '#0080ff'],
             legend: { position: "right" },
             isStacked: true,
 
@@ -189,6 +193,7 @@
             height: 800,
             fontSize: 10,
             bar: {groupWidth: "80%"},
+            colors:['#0020ff', '#0080ff'],
             legend: {position: 'right'},
             isStacked: true,
 
@@ -213,8 +218,7 @@
 
             <div class="col-md-2" id="line_chart" style="width: 550px; height: 600px"></div>
             <div class="col-md-4" id="barchart_values" style="width: 500px; height: 600px; "></div>
-	        <center><div class="col-md-4" id="donutchart" style="width: 900px; height: 600px; "></div></center>
-
+	        <center><div class="col-md-6" id="donutchart" style="width: 900px; height: 600px; "></div></center>
         </div>
 
         <div class="row">
