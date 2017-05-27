@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'w^zn42md3tyj2*h5u1*$@_%(epch=l44s*&!a$9hglb#==^ds-'
+SECRET_KEY = '#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -139,9 +139,9 @@ BOOTSTRAP3 = {
 }
 
 # Email Settings
-EMAIL_HOST = 'smtp.univisiononline.com.ar'
-EMAIL_HOST_USER = 'sistema@univisiononline.com.ar'
-EMAIL_HOST_PASSWORD = 'Univision.00'
+EMAIL_HOST = '#'
+EMAIL_HOST_USER = '#'
+EMAIL_HOST_PASSWORD = '#'
 EMAIL_PORT = 25
 EMAIL_USE_SSL = False
 
